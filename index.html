@@ -1,47 +1,53 @@
-
-
 <!DOCTYPE html>
 <html>
 <head>
-
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" 
-integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" 
-integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  
   <meta charset="utf-8" />
   <title>My Leaflet Map</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <!-- Leaflet CSS (CDN) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""/>
 
   <style>
-    #map {
-      height: 100vh;
-      width: 100%;
-    }
+    /* full-window map */
+    html, body { height: 100%; margin: 0; }
+    #map { height: 100vh; width: 100%; }
+    .leaflet-popup-content { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
   </style>
 </head>
 <body>
 
 <div id="map"></div>
 
-<!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<script>
-  // Create map
-  var map = L.map('map').setView([47.6062, -122.3321], 11); // Seattle
+<!-- Leaflet JS (CDN) -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+  crossorigin=""></script>
 
-  // Add a basemap
+<script>
+  // Initialize the map
+  var map = L.map('map').setView([47.6062, -122.3321], 11); // Seattle coords
+
+  // Add OpenStreetMap basemap
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors'
+    attribution: '&copy; OpenStreetMap contributors',
+    maxZoom: 19
   }).addTo(map);
 
-  // Add a marker
-  L.marker([47.6062, -122.3321])
-    .addTo(map)
-    .bindPopup('Hello from Seattle!');
+  // Add a single marker with popup
+  L.marker([47.6062, -122.3321]).addTo(map).bindPopup('<b>Hello from Seattle!</b>');
+
+  // Example: add a GeoJSON feature (small demo)
+  var demoGeojson = {
+    "type": "Feature",
+    "properties": { "name": "Demo Park" },
+    "geometry": { "type": "Point", "coordinates": [-122.335167, 47.608013] }
+  };
+  L.geoJSON(demoGeojson).bindPopup(function(layer){
+    return layer.feature.properties.name;
+  }).addTo(map);
 </script>
 
 </body>
