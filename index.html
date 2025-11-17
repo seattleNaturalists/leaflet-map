@@ -22,16 +22,17 @@
             margin: 0;
         }
 
-        /* Make all qgis2web labels transparent and readable */
-        .leaflet-tooltip.css_Tidepooling_Seattle_2025_1 {
-            background: transparent !important; /* removes white background */
-            border: none !important;            /* removes border */
-            box-shadow: none !important;        /* removes shadow */
-            color: black;                       /* label text color */
-            font-weight: bold;                  /* make text bold */
-            text-shadow: 1px 1px 2px white;     /* subtle outline for readability */
-            padding: 0 !important;              /* remove default padding */
-        }
+/* Make all qgis2web labels fully transparent and readable */
+.leaflet-tooltip.css_Tidepooling_Seattle_2025_1,
+.leaflet-tooltip.css_Tidepooling_Seattle_2025_1 * {
+    background: transparent !important; /* removes white background */
+    border: none !important;            /* removes any borders */
+    box-shadow: none !important;        /* removes shadows */
+    color: black !important;            /* text color */
+    font-weight: bold !important;       /* optional bold */
+    text-shadow: 1px 1px 2px white !important; /* outline for readability */
+    padding: 0 !important;              /* remove default padding */
+}
     </style>
 
     <title>Tidepooling Map</title>
