@@ -22,17 +22,23 @@
             margin: 0;
         }
 
-        /* Fully transparent qgis2web labels */
-        .leaflet-tooltip.css_Tidepooling_Seattle_2025_1,
-        .leaflet-tooltip.css_Tidepooling_Seattle_2025_1 div,
-        .leaflet-tooltip.css_Tidepooling_Seattle_2025_1 span {
-            background: transparent !important; /* removes white background */
-            border: none !important;            /* removes any borders */
-            box-shadow: none !important;        /* removes shadows */
-            color: black !important;            /* text color */
-            font-weight: bold !important;       /* optional bold */
-            text-shadow: 1px 1px 2px white !important; /* outline for readability */
-            padding: 0 !important;              /* remove default padding */
+        /* Make all qgis2web labels fully transparent and readable */
+        .leaflet-tooltip.css_Tidepooling_Seattle_2025_1 {
+            background-color: transparent !important; /* main background */
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        .leaflet-tooltip.css_Tidepooling_Seattle_2025_1::before {
+            background: transparent !important; /* removes tooltip arrow background */
+        }
+
+        .leaflet-tooltip.css_Tidepooling_Seattle_2025_1 * {
+            background: transparent !important; 
+            color: black !important; 
+            text-shadow: 1px 1px 2px white !important;
+            font-weight: bold !important;
+            padding: 0 !important;
         }
     </style>
 
@@ -57,10 +63,8 @@
     <script src="data/Tidepooling_Seattle_2025_1.js"></script>
 
     <script>
-        var map = L.map('map', {
-            zoomControl:false, maxZoom:28, minZoom:1
-        }).fitBounds([[47.45756983475272,-122.70565902724597],[47.73793755771051,-122.01540776950587]]);
-
+        var map = L.map('map', { zoomControl:false, maxZoom:28, minZoom:1 })
+            .fitBounds([[47.45756983475272,-122.70565902724597],[47.73793755771051,-122.01540776950587]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
@@ -94,10 +98,7 @@
                     audio.src = src;
                     imgTd.parentNode.replaceChild(audio, imgTd);
                     popup._contentNode.classList.add('media');
-                    setTimeout(function() {
-                        popup.setContent(tempDiv.innerHTML);
-                        popup.update();
-                    }, 10);
+                    setTimeout(function() { popup.setContent(tempDiv.innerHTML); popup.update(); }, 10);
                 } else if (/\.(mp4|webm|ogg|mov)$/i.test(src)) {
                     var video = document.createElement('video');
                     video.controls = true;
@@ -109,10 +110,7 @@
                     imgTd.parentNode.replaceChild(video, imgTd);
                     popup._contentNode.classList.add('media');
                     video.addEventListener('loadedmetadata', function() { popup.update(); });
-                    setTimeout(function() {
-                        popup.setContent(tempDiv.innerHTML);
-                        popup.update();
-                    }, 10);
+                    setTimeout(function() { popup.setContent(tempDiv.innerHTML); popup.update(); }, 10);
                 } else {
                     popup._contentNode.classList.remove('media');
                 }
@@ -125,6 +123,7 @@
         var bounds_group = new L.featureGroup([]);
         function setBounds() {}
 
+        // Google Terrain layer
         map.createPane('pane_GoogleTerrain_0');
         map.getPane('pane_GoogleTerrain_0').style.zIndex = 400;
         var layer_GoogleTerrain_0 = L.tileLayer('https://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
@@ -175,9 +174,7 @@
             layerName: 'layer_Tidepooling_Seattle_2025_1',
             pane: 'pane_Tidepooling_Seattle_2025_1',
             onEachFeature: pop_Tidepooling_Seattle_2025_1,
-            pointToLayer: function (feature, latlng) {
-                return L.marker(latlng, style_Tidepooling_Seattle_2025_1_0(feature));
-            },
+            pointToLayer: function (feature, latlng) { return L.marker(latlng, style_Tidepooling_Seattle_2025_1_0(feature)); },
         });
 
         bounds_group.addLayer(layer_Tidepooling_Seattle_2025_1);
@@ -188,15 +185,13 @@
             {label: "Google Terrain", layer: layer_GoogleTerrain_0},
         ];
         var lay = L.control.layers.tree(null, overlaysTree, { collapsed: true }).addTo(map);
-
         setBounds();
 
-        // Labels
         var i = 0;
         layer_Tidepooling_Seattle_2025_1.eachLayer(function(layer) {
             layer.bindTooltip(
-                layer.feature.properties['Place Name'] !== null ? layer.feature.properties['Place Name'] : '',
-                { permanent: true, offset: [0, -16], className: 'css_Tidepooling_Seattle_2025_1' }
+                (layer.feature.properties['Place Name'] !== null ? '<div style="color: #ffffff; font-size: 10pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Place Name'] + '</div>' : ''),
+                { permanent: true, offset: [-0, -16], className: 'css_Tidepooling_Seattle_2025_1' }
             );
             labels.push(layer);
             totalMarkers += 1;
@@ -212,5 +207,3 @@
     </script>
 </body>
 </html>
-
-
